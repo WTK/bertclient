@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION.yml",
     "bertclient_new.gemspec",
+    "lib/bertclient.rb",
     "lib/bertclient_new.rb"
   ]
   s.homepage = %q{http://github.com/WTK/bertclient}
