@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bertclient_new}
-  s.version = "0.4.1"
+  s.version = "0.4.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcin Wtorkowski"]
@@ -20,7 +20,8 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION.yml",
-    "lib/bertclient.rb"
+    "bertclient_new.gemspec",
+    "lib/bertclient_new.rb"
   ]
   s.homepage = %q{http://github.com/WTK/bertclient}
   s.require_paths = ["lib"]
