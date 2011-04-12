@@ -4,8 +4,8 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{bertclient}
-  s.version = "0.4.0"
+  s.name = %q{bertclient_new}
+  s.version = "0.4.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcin Wtorkowski"]
@@ -20,10 +20,9 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION.yml",
-    "bertclient.gemspec",
     "lib/bertclient.rb"
   ]
-  s.homepage = %q{http://github.com/wtk/bertclient}
+  s.homepage = %q{http://github.com/WTK/bertclient}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.7.2}
   s.summary = %q{BERT::Client is a threadsafe BERT-RPC client with support for persistent connections and SSL}

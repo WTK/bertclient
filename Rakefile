@@ -5,10 +5,10 @@ require 'yaml'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "bertclient"
+    gem.name = "bertclient_new"
     gem.summary = %Q{BERT::Client is a threadsafe BERT-RPC client with support for persistent connections and SSL}
     gem.email = "marcin.wtorkowski@gmail.com"
-    gem.homepage = "http://github.com/wtk/bertclient"
+    gem.homepage = "http://github.com/WTK/bertclient"
     gem.authors = ["Marcin Wtorkowski"]
     gem.add_dependency('bert')
     # gem is a Gem::Specification...
