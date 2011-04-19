@@ -9,8 +9,9 @@ begin
     gem.summary = %Q{BERT::Client is a threadsafe BERT-RPC client with support for persistent connections and SSL}
     gem.email = "marcin.wtorkowski@gmail.com"
     gem.homepage = "http://github.com/WTK/bertclient"
-    gem.authors = ["Marcin Wtorkowski"]
+    gem.author = "Marcin Wtorkowski"
     gem.add_dependency('bert')
+    gem.license = 'MIT'
     # gem is a Gem::Specification...
     # see http://www.rubygems.org/read/chapter/20 for additional settings
   end

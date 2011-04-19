@@ -1,7 +1,3 @@
-require 'openssl'
-require 'zlib'
-require 'bert'
-
 module BERT
   class Client
     GZIP_BERP = t[:info, :encoding, [t[:gzip]]]
@@ -48,24 +44,26 @@ module BERT
       read_response
     end
 
-    def read_response
-      gzip_encoded = false
+    def read_response      
       response = nil
 
-      loop do
-        response = read_berp
-        break unless response[0] == :info
+      if @gzip
+        gzip_encoded = false
+        loop do
+          response = read_berp
+          break unless response[0] == :info
 
-        # For now we only know how to handle gzip encoding info packets
-        if response == GZIP_BERP
-          gzip_encoded = true
-        else
-          raise NotImplementedError, "Only gzip-encoding related info packets are supported in this version of bertclient"
+          # For now we only know how to handle gzip encoding info packets
+          if response == GZIP_BERP
+            gzip_encoded = true
+          else
+            raise NotImplementedError, "Only gzip-encoding related info packets are supported in this version of bertclient"
+          end
         end
-      end
 
-      if gzip_encoded and response[0] == :gzip
-        response = BERT.decode(Zlib::Inflate.inflate(response[1]))
+        if gzip_encoded and response[0] == :gzip
+          response = BERT.decode(Zlib::Inflate.inflate(response[1]))
+        end
       end
 
       response
@@ -88,7 +86,7 @@ module BERT
           raise UnknownError, "Unknown server error: #{response.inspect}"
         end
       when :user
-        raise UserError.new("#{klass}: #{detail}\n#{backtrace.join()}")
+        raise UserError.new("#{klass}: #{detail}#{"\n#{backtrace.join()}" if backtrace.respond_to?(:join)}", klass, code)
       when :protocol
         if code == 1
           raise BadHeader
@@ -104,29 +102,12 @@ module BERT
 
     def get_socket_or_create thread
       sock = Client.get_socket(thread)
-      unless sock
-        sock = Client.set_socket connect(), thread
-      end
+      sock = Client.set_socket(connect(), thread) unless sock
       sock
     end
 
     # Creates a socket object which does speedy, non-blocking reads
     # and can perform reliable read timeouts.
-
-    def connect_old
-      # Create new tcp socket
-      sock = Socket.tcp(@host, @port, Socket::SOCK_STREAM, 0)
-      sock.setsockopt Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1
-      if @ssl
-        sock = OpenSSL::SSL::SSLSocket.new(sock)
-        sock.sync_close = true
-        sock.connect
-        sock.post_connection_check(@host) if @verify_ssl
-      end
-
-      sock
-    end
-
     def connect
       addr = Socket.getaddrinfo(@host, nil, Socket::AF_INET)
       sock = Socket.new(Socket.const_get(addr[0][0]), Socket::SOCK_STREAM, 0)
@@ -148,6 +129,10 @@ module BERT
       sock.connect(Socket.pack_sockaddr_in(@port, addr[0][3]))
       sock.post_connection_check(@host) if @ssl and @verify_ssl
       sock
+    rescue Errno::EHOSTUNREACH
+      raise ConnectionError.new @host, @port
+    rescue Errno::ECONNREFUSED
+      raise ConnectionError.new @host, @port
     end
 
     # Close socket and clean it up from the pool
@@ -180,6 +165,10 @@ module BERT
       data = BERT.encode(obj)
       data = negotiate_gzip(data) if @gzip
       @socket.write(Client.create_berp(data))
+    rescue Errno::EPIPE
+      # close broken socket
+      close
+      raise ConnectionLostError.new @host, @port
     end
 
     def negotiate_gzip(data)
