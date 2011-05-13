@@ -2,8 +2,8 @@
 
 BERT::Client is a threadsafe BERT-RPC client with support for persistent 
 connections and SSL. It currently exposes BERT-RPC's cast and call.
-Initially designed to work with *modified* [ernie](https://github.com/mojombo/ernie) server that doesn't close connection after response.
-Tested on ruby 1.9.2
+This version is designed to work with *modified* [ernie](https://github.com/mojombo/ernie) server that **doesn't** (as a contrary to regular ernie version) close connection after response.
+Tested on ruby 1.9.2.
 
 # Dependancies
 
@@ -29,7 +29,94 @@ You can also use blocks to create ephemeral connections:
       client.call(:calc, :add, 1, 2)
     end
 
+# Available contructor attributes
+
+<table>
+    <tr>
+        <th>Option</th><th>Default value</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>
+            host
+        </td>
+        <td>
+            _localhost_
+        </td>
+        <td>
+            Hostname of server that ernie server runs on.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            port
+        </td>
+        <td>
+            _9999_
+        </td>
+        <td>
+            Port number on which ernie server listens on.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            timeout
+        </td>
+        <td>
+            _15_
+        </td>
+        <td>
+            Currently socket doesn't connection doesn't respect this value. TODO: Fix it
+        </td>
+    </tr>
+    <tr>
+        <td>
+            gzip | gzip_threshold | gzip_accept_sent
+        </td>
+        <td>
+            _false_ | _1024_ | _false_
+        </td>
+        <td>
+            [untested] These gzip-encoding related attributes have been introduced in original bertclient. I wasn't able to find any information concerning possible usage of gzip in bert/berp, so I'm not really sure whenever this works and/or is implemented correctly.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            ssl
+        </td>
+        <td>
+            _false_
+        </td>
+        <td>
+            TODO
+        </td>
+    </tr>
+    <tr>
+        <td>
+            verify_ssl
+        </td>
+        <td>
+            _true_
+        </td>
+        <td>
+            TODO
+        </td>
+    </tr>
+    <tr>
+        <td>
+            encoding
+        </td>
+        <td>
+            _"utf-8"_|_nil_
+        </td>
+        <td>
+            Expected encoding for any string data returned by ernie. For this function working correctly, you have to use version of BERT that supports passing encoding type to decode function.
+            There are a lot of forks of BERT that are doing just that, personally I'm using [this one](https://github.com/kenpratt/bert).
+            If your BERT library doesn't support passing encoding to decode method, client would fallback to regular one-argument method of BERT.
+        </td>
+    </tr>
+</table>
+
 # TODO
 
-* Write some tests
+* Write tests
 * Package and publish the gem version
