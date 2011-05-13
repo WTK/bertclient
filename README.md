@@ -2,7 +2,9 @@
 
 BERT::Client is a threadsafe BERT-RPC client with support for persistent 
 connections and SSL. It currently exposes BERT-RPC's cast and call.
+
 This version is designed to work with *modified* [ernie](https://github.com/mojombo/ernie) server that **doesn't** (as a contrary to regular ernie version) close connection after response.
+
 Tested on ruby 1.9.2.
 
 # Dependancies
