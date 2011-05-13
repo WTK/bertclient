@@ -17,6 +17,8 @@ module BERT
       @ssl = opts[:ssl] || false
       @verify_ssl = opts.has_key?(:verify_ssl) ? opts[:verify_ssl] : true
 
+      @encoding = opts.delete(:encoding) || 'utf-8' if encoding_supported?
+
       @socket = get_socket_or_create Thread.current
       
       execute(&block) if block_given?
@@ -37,6 +39,10 @@ module BERT
     end
 
     private
+    def encoding_supported?
+      BERT.method(:decode).parameters.length > 1 ? true : false
+    end
+
     # Wrapper for both cast and call mechanisms
     def cast_or_call(cc, mod, fun, *args)
       req = t[cc, mod.to_sym, fun.to_sym, args]
@@ -155,7 +161,7 @@ module BERT
     def read_berp
       length = @socket.read(4).unpack('N').first
       data = @socket.read(length)
-      BERT.decode(data)
+      @encoding ? BERT.decode(data, @encoding) : BERT.decode(data)
     end
 
     # Accepts a Ruby object, converts to a berp and sends through the socket
@@ -189,7 +195,12 @@ module BERT
     class << self
       # Accepts a string and returns a berp
       def create_berp(data)
-        [[data.bytesize].pack('N'), data].join
+        if @encoding
+          # if there's encoding set, we have to encode length the same way or "join" method will fail
+          [([data.bytesize].pack('N')).force_encoding(@encoding), data].join
+        else
+          [[data.bytesize].pack('N'), data].join
+        end
       end
       
       def get_socket thread
