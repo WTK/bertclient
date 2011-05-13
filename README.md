@@ -40,7 +40,7 @@ You can also use blocks to create ephemeral connections:
             host
         </td>
         <td>
-            _localhost_
+            localhost
         </td>
         <td>
             Hostname of server that ernie server runs on.
@@ -51,7 +51,7 @@ You can also use blocks to create ephemeral connections:
             port
         </td>
         <td>
-            _9999_
+            9999
         </td>
         <td>
             Port number on which ernie server listens on.
@@ -62,7 +62,7 @@ You can also use blocks to create ephemeral connections:
             timeout
         </td>
         <td>
-            _15_
+            15
         </td>
         <td>
             Currently socket doesn't connection doesn't respect this value. TODO: Fix it
@@ -70,10 +70,10 @@ You can also use blocks to create ephemeral connections:
     </tr>
     <tr>
         <td>
-            gzip | gzip_threshold | gzip_accept_sent
+            gzip, gzip_threshold, gzip_accept_sent
         </td>
         <td>
-            _false_ | _1024_ | _false_
+            false, 1024, false
         </td>
         <td>
             [untested] These gzip-encoding related attributes have been introduced in original bertclient. I wasn't able to find any information concerning possible usage of gzip in bert/berp, so I'm not really sure whenever this works and/or is implemented correctly.
@@ -84,7 +84,7 @@ You can also use blocks to create ephemeral connections:
             ssl
         </td>
         <td>
-            _false_
+            false
         </td>
         <td>
             TODO
@@ -95,7 +95,7 @@ You can also use blocks to create ephemeral connections:
             verify_ssl
         </td>
         <td>
-            _true_
+            true
         </td>
         <td>
             TODO
@@ -106,7 +106,7 @@ You can also use blocks to create ephemeral connections:
             encoding
         </td>
         <td>
-            _"utf-8"_|_nil_
+            "utf-8"|nil
         </td>
         <td>
             Expected encoding for any string data returned by ernie. For this function working correctly, you have to use version of BERT that supports passing encoding type to decode function.
