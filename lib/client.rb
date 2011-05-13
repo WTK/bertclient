@@ -64,6 +64,8 @@ module BERT
         if gzip_encoded and response[0] == :gzip
           response = BERT.decode(Zlib::Inflate.inflate(response[1]))
         end
+      else
+        response = read_berp
       end
 
       response
