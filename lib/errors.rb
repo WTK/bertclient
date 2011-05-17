@@ -11,8 +11,8 @@ module BERT
     class UserError < RPCError
       attr_accessor :code, :reason
 
-      def initialize(msg = nil, klass=nil, code=0)
-        @klass = klass
+      def initialize(msg = nil, reason=nil, code=0)
+        @reason = reason
         @code = code
         super(msg)
       end
