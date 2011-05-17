@@ -112,7 +112,7 @@ You can also use blocks to create ephemeral connections:
         </td>
         <td>
             Expected encoding for any string data returned by ernie. For this function working correctly, you have to use version of BERT that supports passing encoding type to decode function.
-            There are a lot of forks of BERT that are doing just that, personally I'm using [this one](https://github.com/kenpratt/bert).
+            There are a lot of forks of BERT that are doing just that, personally I'm using <a href="https://github.com/kenpratt/bert">this one</a>.
             If your BERT library doesn't support passing encoding to decode method, client would fallback to regular one-argument method of BERT.
         </td>
     </tr>
