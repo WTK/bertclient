@@ -19,7 +19,7 @@ module BERT
 
       @encoding = opts.delete(:encoding) || 'utf-8' if encoding_supported?
 
-      @socket = get_socket_or_create Thread.current
+      @socket = get_socket_or_create conn_id()
       
       execute(&block) if block_given?
     end
@@ -39,6 +39,10 @@ module BERT
     end
 
     private
+    def conn_id
+      "#{Thread.current}#{@host}#{@port}"
+    end
+
     def encoding_supported?
       BERT.method(:decode).parameters.length > 1 ? true : false
     end
@@ -144,9 +148,12 @@ module BERT
     end
 
     # Close socket and clean it up from the pool
-    def close
-      @socket.close
-      Client.del_socket Thread.current
+    def close      
+      begin
+        @socket.close
+      rescue IOError
+      end
+      Client.del_socket conn_id()
       true
     end
 
@@ -203,17 +210,17 @@ module BERT
         end
       end
       
-      def get_socket thread
-        @socket_pool[thread]
+      def get_socket id
+        @socket_pool[id]
       end
 
-      def set_socket sock, thread
-        @socket_pool[thread] = sock
-        @socket_pool[thread]
+      def set_socket sock, id
+        @socket_pool[id] = sock
+        get_socket id
       end
 
-      def del_socket thread
-        @socket_pool.delete thread
+      def del_socket id
+        @socket_pool.delete id
       end
     end
   end
