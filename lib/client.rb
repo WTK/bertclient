@@ -180,10 +180,10 @@ module BERT
       data = BERT.encode(obj)
       data = negotiate_gzip(data) if @gzip
       @socket.write(Client.create_berp(data))
+    rescue IOError
+      connection_lost
     rescue Errno::EPIPE
-      # close broken socket
-      close
-      raise ConnectionLostError.new @host, @port
+      connection_lost
     end
 
     def negotiate_gzip(data)
@@ -197,6 +197,12 @@ module BERT
         data = BERT.encode(t[:gzip, Zlib::Deflate.deflate(data)])
       end
       data
+    end
+
+    # close broken socket
+    def connection_lost
+      close
+      raise ConnectionLostError.new @host, @port
     end
 
     class << self
